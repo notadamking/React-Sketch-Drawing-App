@@ -3,34 +3,40 @@ import Validator from "./Validator";
 
 interface IPointConstructor {
   type?: "Point";
+  color?: string;
   x: number;
   y: number;
 }
 
 class Point extends Shape {
-  public static create({ x, y }: IPointConstructor) {
-    return new Point({ x, y });
+  public static create({ color, x, y }: IPointConstructor) {
+    return new Point({ color, x, y });
   }
 
   private x: number;
   private y: number;
 
-  constructor({ x, y }: IPointConstructor) {
+  constructor({ color, x, y }: IPointConstructor) {
     super();
 
     this.x = x;
     this.y = y;
 
+    if (color) {
+      this.color = color;
+    }
+
     this.validate();
   }
 
   public clone(): Point {
-    return new Point({ x: this.x, y: this.y });
+    return new Point({ color: this.color, x: this.x, y: this.y });
   }
 
   public toJSON(): IPointConstructor {
     return {
       type: "Point",
+      color: this.color,
       x: this.x,
       y: this.y
     };
@@ -86,7 +92,14 @@ class Point extends Shape {
     this.moveY(deltaY);
   }
 
-  public draw(context: CanvasRenderingContext2D): void {
+  public draw(
+    context: CanvasRenderingContext2D,
+    options?: { opacity?: number }
+  ): void {
+    context.fillStyle = options
+      ? this.getColorWithOpacity(options.opacity)
+      : this.color;
+
     context.fillRect(this.x, this.y, 1, 1);
   }
 }

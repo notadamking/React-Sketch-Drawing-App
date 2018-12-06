@@ -5,6 +5,7 @@ import Line from "./Line";
 
 interface ITriangleConstructor {
   type?: "Triangle";
+  color?: string;
   xPointA: number;
   yPointA: number;
   xPointB: number;
@@ -15,6 +16,7 @@ interface ITriangleConstructor {
 
 class Triangle extends Shape2D {
   public static create({
+    color,
     xPointA,
     yPointA,
     xPointB,
@@ -34,10 +36,12 @@ class Triangle extends Shape2D {
   private pointC: Point;
 
   constructor({
+    color,
     pointA,
     pointB,
     pointC
   }: {
+    color?: string;
     pointA: Point;
     pointB: Point;
     pointC: Point;
@@ -48,12 +52,17 @@ class Triangle extends Shape2D {
     this.pointB = pointB.clone();
     this.pointC = pointC.clone();
 
+    if (color) {
+      this.color = color;
+    }
+
     this.validate();
   }
 
   public toJSON(): ITriangleConstructor {
     return {
       type: "Triangle",
+      color: this.color,
       xPointA: this.pointA.getX(),
       yPointA: this.pointA.getY(),
       xPointB: this.pointB.getX(),
@@ -144,8 +153,15 @@ class Triangle extends Shape2D {
     return Math.abs(base - edges) / 2;
   }
 
-  public draw(context: CanvasRenderingContext2D): void {
+  public draw(
+    context: CanvasRenderingContext2D,
+    options?: { opacity?: number }
+  ): void {
     context.save();
+
+    context.fillStyle = options
+      ? this.getColorWithOpacity(options.opacity)
+      : this.color;
 
     context.beginPath();
     context.moveTo(this.pointA.getX(), this.pointA.getY());

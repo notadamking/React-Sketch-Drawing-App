@@ -5,6 +5,7 @@ import Line from "./Line";
 
 interface IRectangleConstructorDouble {
   type?: "Rectangle";
+  color?: string;
   topLeftX: number;
   topLeftY: number;
   width: number;
@@ -14,6 +15,7 @@ interface IRectangleConstructorDouble {
 
 interface IRectangleConstructorSingle {
   type?: "Rectangle" | "Square" | "EmbeddedPicture";
+  color?: string;
   topLeftX: number;
   topLeftY: number;
   width: number;
@@ -33,7 +35,12 @@ class Rectangle extends Shape2D {
       height = spec.width;
     }
 
-    return new Rectangle({ topLeft, height, width: spec.width });
+    return new Rectangle({
+      color: spec.color,
+      topLeft,
+      height,
+      width: spec.width
+    });
   }
 
   protected topLeft: Point;
@@ -45,11 +52,13 @@ class Rectangle extends Shape2D {
   protected isOutline: boolean;
 
   constructor({
+    color,
     topLeft,
     height,
     width,
     isOutline = false
   }: {
+    color?: string;
     topLeft: Point;
     width: number;
     height: number;
@@ -62,12 +71,17 @@ class Rectangle extends Shape2D {
     this.topLeft = topLeft.clone();
     this.isOutline = isOutline;
 
+    if (color) {
+      this.color = color;
+    }
+
     this.validate();
   }
 
   public toJSON(): IRectangleConstructorDouble | IRectangleConstructorSingle {
     return {
       type: "Rectangle",
+      color: this.color,
       topLeftX: this.topLeft.getX(),
       topLeftY: this.topLeft.getY(),
       height: this.height,
@@ -209,8 +223,17 @@ class Rectangle extends Shape2D {
     return this.width * this.height;
   }
 
-  public draw(context: CanvasRenderingContext2D): void {
+  public draw(
+    context: CanvasRenderingContext2D,
+    options?: { opacity?: number }
+  ): void {
     context.save();
+
+    context.fillStyle = options
+      ? this.getColorWithOpacity(options.opacity)
+      : this.color;
+
+    context.strokeStyle = "black";
 
     if (this.isOutline) {
       context.setLineDash([10, 3]);

@@ -22,6 +22,7 @@ export interface State {
   startingPoint: Point | null;
   previousPoint: Point | null;
   isDragging: boolean;
+  shouldRender: boolean;
 }
 
 @inject("drawing")
@@ -34,7 +35,8 @@ class DrawingCanvas extends React.Component<Props, State> {
     context: null,
     startingPoint: null,
     previousPoint: null,
-    isDragging: false
+    isDragging: false,
+    shouldRender: false
   };
 
   private container = React.createRef<HTMLDivElement>();
@@ -66,7 +68,8 @@ class DrawingCanvas extends React.Component<Props, State> {
 
     if (selectedPoints.length >= drawing!.activeTool!.numPoints) {
       if (drawing!.activeTool!.shouldRender) {
-        drawing!.executeCommand(new CreateCommand(selectedPoints));
+        const command = new CreateCommand(drawing!, selectedPoints);
+        drawing!.executeCommand(command);
       } else {
         drawing!.selectShapes(selectedPoints);
       }
@@ -87,11 +90,13 @@ class DrawingCanvas extends React.Component<Props, State> {
           [...selectedPoints, point],
           drawing!
         );
+        currentShape.setColor(drawing!.color);
       } else if (selectedPoints.length === 1) {
         currentShape = new Line({
           pointA: selectedPoints[0],
           pointB: point
         });
+        currentShape.setColor(drawing!.color);
       }
     } catch {} // tslint:disable-line
 
@@ -131,7 +136,8 @@ class DrawingCanvas extends React.Component<Props, State> {
     const deltaY = point.getY() - startingPoint!.getY();
 
     if (deltaX || deltaY) {
-      drawing!.executeCommand(new MoveCommand({ deltaX, deltaY }));
+      const command = new MoveCommand(drawing!, { deltaX, deltaY });
+      drawing!.executeCommand(command);
     } else {
       drawing!.setSelectedShapes([] as Shape[]);
     }
@@ -199,6 +205,10 @@ class DrawingCanvas extends React.Component<Props, State> {
     });
   };
 
+  public triggerRender = () => {
+    this.setState({ shouldRender: !this.state.shouldRender });
+  };
+
   public renderShapes = () => {
     const { context } = this.state;
     const { drawing } = this.props;
@@ -207,34 +217,26 @@ class DrawingCanvas extends React.Component<Props, State> {
       const children = drawing!.shapes.getChildren();
 
       for (const child of children) {
-        context!.save();
-
         context!.fillStyle = child.getColor();
 
         if (drawing!.selectedShapes.indexOf(child) > -1) {
-          context!.globalAlpha = 0.5;
+          child.draw(context!, { opacity: 0.5 });
+        } else {
+          child.draw(context!);
         }
-
-        child.draw(context!);
-
-        context!.restore();
       }
     }
   };
 
   public renderTemporaryShapes = () => {
     const { context, currentShape, temporaryShapes } = this.state;
-    const { drawing } = this.props;
-
-    context!.globalAlpha = 0.5;
-    context!.fillStyle = drawing!.color;
 
     if (currentShape) {
-      currentShape.draw(context!);
+      currentShape.draw(context!, { opacity: 0.5 });
     }
 
     for (const shape of temporaryShapes) {
-      shape.draw(context!);
+      shape.draw(context!, { opacity: 0.5 });
     }
   };
 
@@ -265,7 +267,7 @@ class DrawingCanvas extends React.Component<Props, State> {
 
     return (
       <div ref={this.container} className="DrawingCanvas__container">
-        <HeaderPanel />
+        <HeaderPanel triggerRender={this.triggerRender} />
         <canvas
           id="canvas"
           height={height}

@@ -4,6 +4,7 @@ import Validator from "./Validator";
 
 interface ILineConstructor {
   type?: "Line";
+  color?: string;
   xPointA: number;
   yPointA: number;
   xPointB: number;
@@ -12,6 +13,7 @@ interface ILineConstructor {
 
 class Line extends Shape {
   public static create({
+    color,
     xPointA,
     yPointA,
     xPointB,
@@ -20,17 +22,29 @@ class Line extends Shape {
     const pointA = new Point({ x: xPointA, y: yPointA });
     const pointB = new Point({ x: xPointB, y: yPointB });
 
-    return new Line({ pointA, pointB });
+    return new Line({ color, pointA, pointB });
   }
 
   private pointA: Point;
   private pointB: Point;
 
-  constructor({ pointA, pointB }: { pointA: Point; pointB: Point }) {
+  constructor({
+    color,
+    pointA,
+    pointB
+  }: {
+    color?: string;
+    pointA: Point;
+    pointB: Point;
+  }) {
     super();
 
     this.pointA = pointA.clone();
     this.pointB = pointB.clone();
+
+    if (color) {
+      this.color = color;
+    }
 
     this.validate();
   }
@@ -38,6 +52,7 @@ class Line extends Shape {
   public toJSON(): ILineConstructor {
     return {
       type: "Line",
+      color: this.color,
       xPointA: this.pointA.getX(),
       yPointA: this.pointA.getY(),
       xPointB: this.pointB.getX(),
@@ -90,8 +105,15 @@ class Line extends Shape {
     return rise / run;
   }
 
-  public draw(context: CanvasRenderingContext2D): void {
+  public draw(
+    context: CanvasRenderingContext2D,
+    options?: { opacity?: number }
+  ): void {
     context.save();
+
+    context.fillStyle = options
+      ? this.getColorWithOpacity(options.opacity)
+      : this.color;
 
     context.strokeStyle = context.fillStyle;
 

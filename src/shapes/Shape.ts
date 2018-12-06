@@ -1,8 +1,10 @@
+import Color from "color";
+
 import Point from "./Point";
 
 export default abstract class Shape {
-  private parent?: Shape;
-  private color: string = "black";
+  protected parent?: Shape;
+  protected color: string = "black";
 
   public hasParent() {
     return this.parent !== undefined;
@@ -22,6 +24,16 @@ export default abstract class Shape {
 
   public setColor(color: string) {
     this.color = color;
+  }
+
+  public getColorWithOpacity(opacity?: number) {
+    const color = Color(this.color);
+
+    if (opacity) {
+      return color.fade(opacity).string();
+    }
+
+    return color.string();
   }
 
   public saveToStream(out: NodeJS.WritableStream) {

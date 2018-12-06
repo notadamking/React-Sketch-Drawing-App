@@ -4,6 +4,7 @@ import Validator from "./Validator";
 
 interface IEllipseConstructorDouble {
   type?: "Ellipse";
+  color?: string;
   centerX: number;
   centerY: number;
   radiusY: number;
@@ -12,6 +13,7 @@ interface IEllipseConstructorDouble {
 
 interface IEllipseConstructorSingle {
   type?: "Ellipse" | "Circle";
+  color?: string;
   centerX: number;
   centerY: number;
   radius: number;
@@ -40,7 +42,7 @@ class Ellipse extends Shape2D {
       radiusY = spec.radius;
     }
 
-    return new Ellipse({ center, radiusX, radiusY });
+    return new Ellipse({ color: spec.color, center, radiusX, radiusY });
   }
 
   protected center: Point;
@@ -52,10 +54,12 @@ class Ellipse extends Shape2D {
   protected radiusY: number;
 
   constructor({
+    color,
     center,
     radiusX,
     radiusY
   }: {
+    color?: string;
     center: Point;
     radiusY: number;
     radiusX: number;
@@ -66,6 +70,10 @@ class Ellipse extends Shape2D {
     this.radiusY = radiusY;
     this.center = center.clone();
 
+    if (color) {
+      this.color = color;
+    }
+
     this.resetEdges();
 
     this.validate();
@@ -74,6 +82,7 @@ class Ellipse extends Shape2D {
   public toJSON(): IEllipseConstructorDouble | IEllipseConstructorSingle {
     return {
       type: "Ellipse",
+      color: this.color,
       centerX: this.center.getX(),
       centerY: this.center.getY(),
       radiusX: this.radiusX,
@@ -162,9 +171,16 @@ class Ellipse extends Shape2D {
     return Math.PI * this.radiusY * this.radiusX;
   }
 
-  public draw(context: CanvasRenderingContext2D): void {
+  public draw(
+    context: CanvasRenderingContext2D,
+    options?: { opacity?: number }
+  ): void {
     context.save();
     context.beginPath();
+
+    context.fillStyle = options
+      ? this.getColorWithOpacity(options.opacity)
+      : this.color;
 
     context.translate(
       this.center.getX() - this.radiusX,
@@ -173,8 +189,8 @@ class Ellipse extends Shape2D {
     context.scale(this.radiusX, this.radiusY);
     context.arc(1, 1, 1, 0, 2 * Math.PI, false);
 
-    context.restore();
     context.fill();
+    context.restore();
   }
 }
 

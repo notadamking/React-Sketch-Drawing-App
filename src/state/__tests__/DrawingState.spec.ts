@@ -191,7 +191,7 @@ test("Copy selected to paste buffer", () => {
 
 test("Execute, undo, and redo command", () => {
   const state = new DrawingState();
-  const command = new DeleteCommand();
+  const command = new DeleteCommand(state);
 
   expect(state.commandHistory.length).toEqual(0);
   expect(state.undoHistory.length).toEqual(0);

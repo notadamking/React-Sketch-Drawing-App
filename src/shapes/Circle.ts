@@ -3,6 +3,7 @@ import Point from "./Point";
 
 interface ICircleConstructorSingle {
   type?: "Circle";
+  color?: string;
   centerX: number;
   centerY: number;
   radius: number;
@@ -10,19 +11,29 @@ interface ICircleConstructorSingle {
 
 class Circle extends Ellipse {
   public static create({
+    color,
     centerX,
     centerY,
     radius
   }: ICircleConstructorSingle): Circle {
     const center = new Point({ x: centerX, y: centerY });
 
-    return new Circle({ radius, center });
+    return new Circle({ color, radius, center });
   }
 
   private radius: number;
 
-  constructor({ radius, center }: { center: Point; radius: number }) {
+  constructor({
+    radius,
+    center,
+    color
+  }: {
+    color?: string;
+    center: Point;
+    radius: number;
+  }) {
     super({
+      color,
       center,
       radiusX: radius,
       radiusY: radius
@@ -35,6 +46,7 @@ class Circle extends Ellipse {
   public toJSON(): ICircleConstructorSingle {
     return {
       type: "Circle",
+      color: this.color,
       centerX: this.center.getX(),
       centerY: this.center.getY(),
       radius: this.radius
@@ -56,9 +68,16 @@ class Circle extends Ellipse {
     return Math.PI * Math.pow(this.radius, 2);
   }
 
-  public draw(context: CanvasRenderingContext2D): void {
+  public draw(
+    context: CanvasRenderingContext2D,
+    options?: { opacity?: number }
+  ): void {
     context.save();
     context.beginPath();
+
+    context.fillStyle = options
+      ? this.getColorWithOpacity(options.opacity)
+      : this.color;
 
     context.translate(
       this.center.getX() - this.radius,
@@ -67,8 +86,8 @@ class Circle extends Ellipse {
     context.scale(this.radius, this.radius);
     context.arc(1, 1, 1, 0, 2 * Math.PI, false);
 
-    context.restore();
     context.fill();
+    context.restore();
   }
 }
 
