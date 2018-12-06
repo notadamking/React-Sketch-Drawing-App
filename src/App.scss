@@ -1,0 +1,23 @@
+@import "~antd/dist/antd.css";
+
+$FONT_FAMILY: "Montserrat", sans-serif;
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: white;
+  font-family: $FONT_FAMILY;
+  min-height: 100vh;
+  overflow: hidden;
+
+  * {
+    font-family: $FONT_FAMILY;
+  }
+}
+
+.App__page {
+  display: flex;
+  flex-direction: row;
+}

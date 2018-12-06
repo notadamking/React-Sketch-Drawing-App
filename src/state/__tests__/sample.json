@@ -1,0 +1,6 @@
+{
+  "type": "CompositeShape",
+  "children": [
+    { "type": "Square", "topLeftX": 50, "topLeftY": 50, "width": 10 }
+  ]
+}
