@@ -3,22 +3,20 @@ import DrawingState from "src/state/DrawingState";
 import { Shape, Point } from "src/shapes";
 
 class CreateCommand extends DrawingCommand {
-  private selectedPoints: Point[];
+  private createdShape: Shape;
 
-  constructor(selectedPoints: Point[]) {
+  constructor(state: DrawingState, selectedPoints: Point[]) {
     super();
-    this.selectedPoints = selectedPoints;
+    this.createdShape = state.activeTool!.create(selectedPoints, state);
+    this.createdShape.setColor(state.color);
   }
 
-  protected executeCommand = (state: DrawingState) => {
-    const newShape: Shape = state.activeTool!.create(
-      this.selectedPoints,
-      state
-    );
+  public execute = (state: DrawingState) => {
+    state.addShape(this.createdShape);
+  };
 
-    newShape.setColor(state.color);
-
-    state.addShape(newShape);
+  public undo = (state: DrawingState) => {
+    state.removeShape(this.createdShape);
   };
 }
 

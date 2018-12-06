@@ -3,18 +3,25 @@ import DrawingState from "src/state/DrawingState";
 import { Shape } from "src/shapes";
 
 class PasteCommand extends DrawingCommand {
-  protected executeCommand = (state: DrawingState) => {
-    const selectedShapes = [] as Shape[];
+  private pasteBuffer: Shape[];
+  private selectedShapes: Shape[];
 
-    state.pasteBuffer.forEach(shape => {
-      shape.move(5, 5);
+  constructor(state: DrawingState) {
+    super();
 
-      state.addShape(shape);
+    this.selectedShapes = state.selectedShapes.slice();
+    this.pasteBuffer = state.pasteBuffer.slice();
+    this.pasteBuffer.forEach(shape => shape.move(10, 10));
+  }
 
-      selectedShapes.push(shape);
-    });
+  public execute = (state: DrawingState) => {
+    this.pasteBuffer.forEach(shape => state.addShape(shape));
+    state.setSelectedShapes(this.pasteBuffer);
+  };
 
-    state.setSelectedShapes(selectedShapes);
+  public undo = (state: DrawingState) => {
+    this.pasteBuffer.forEach(shape => state.removeShape(shape));
+    state.setSelectedShapes(this.selectedShapes);
   };
 }
 

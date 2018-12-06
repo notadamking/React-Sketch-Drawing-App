@@ -7,7 +7,7 @@ it("Execute and undo work correctly", () => {
   const width = 10;
 
   const state = new DrawingState();
-  const command = new MoveCommand({ deltaX: 10, deltaY: 10 });
+  const command = new MoveCommand(state, { deltaX: 10, deltaY: 10 });
   const square = new Square({ topLeft, width });
 
   state.addShape(square);

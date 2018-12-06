@@ -1,10 +1,11 @@
 import * as React from "react";
+import Color from "color";
 import { Button, Icon, Input, Tooltip } from "antd";
 import { observer, inject } from "mobx-react";
 import { SketchPicker, ColorResult } from "react-color";
 import cx from "classnames";
 
-import { DeleteCommand, PasteCommand } from "../../commands";
+import { ColorCommand, DeleteCommand, PasteCommand } from "../../commands";
 import { HotKeyListener } from "../../components";
 import DrawingState from "../../state/DrawingState";
 
@@ -12,6 +13,7 @@ import "./HeaderPanel.scss";
 
 export interface Props {
   drawing?: DrawingState;
+  triggerRender: () => void;
 }
 
 export interface State {
@@ -27,43 +29,57 @@ class HeaderPanel extends React.Component<Props, State> {
     isPickerVisible: false
   };
 
+  public toggleColorPicker = () => {
+    this.setState({ isPickerVisible: !this.state.isPickerVisible });
+  };
+
+  public executeCommand = (Command: any) => () => {
+    const command = new Command(this.props.drawing!);
+    this.props.drawing!.executeCommand(command);
+    this.props.triggerRender();
+  };
+
+  public execute = (fn: () => void) => () => {
+    fn();
+    this.props.triggerRender();
+  };
+
   public actions = [
     {
       title: "Undo",
       icon: "undo",
       hotKey: "z",
-      onClick: this.props.drawing!.undoCommand
+      onClick: this.execute(this.props.drawing!.undoCommand)
     },
     {
       title: "Redo",
       icon: "redo",
       hotKey: "y",
-      onClick: this.props.drawing!.redoCommand
+      onClick: this.execute(this.props.drawing!.redoCommand)
     },
     {
       title: "Copy",
       icon: "copy",
       hotKey: "d",
-      onClick: this.props.drawing!.copySelectedToPasteBuffer
+      onClick: this.execute(this.props.drawing!.copySelectedToPasteBuffer)
     },
     {
       title: "Paste",
       icon: "audit",
       hotKey: "f",
-      onClick: () => this.props.drawing!.executeCommand(new PasteCommand())
+      onClick: this.executeCommand(PasteCommand)
     },
     {
       title: "Delete",
       icon: "delete",
       hotKey: "x",
-      onClick: () => this.props.drawing!.executeCommand(new DeleteCommand())
+      onClick: this.executeCommand(DeleteCommand)
     },
     {
       title: "Color",
       icon: "appstore",
       hotKey: "r",
-      onClick: () =>
-        this.setState({ isPickerVisible: !this.state.isPickerVisible })
+      onClick: this.execute(this.toggleColorPicker)
     }
   ];
 
@@ -88,14 +104,13 @@ class HeaderPanel extends React.Component<Props, State> {
     }
   };
 
-  public handleColorChange = (color: ColorResult) => {
-    this.props.drawing!.setColor(color.hex);
+  public handleColorChange = (result: ColorResult) => {
+    const command = new ColorCommand(this.props.drawing!);
+    const color = Color(result.hex).alpha(result.rgb.a || 1);
 
-    for (const shape of this.props.drawing!.selectedShapes) {
-      shape.setColor(color.hex);
-    }
-
-    this.setState({ isPickerVisible: false });
+    this.props.drawing!.setColor(color.string());
+    this.props.drawing!.executeCommand(command);
+    this.props.triggerRender();
   };
 
   public handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

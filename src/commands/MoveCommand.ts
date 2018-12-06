@@ -7,27 +7,27 @@ class MoveCommand extends DrawingCommand {
   private deltaX: number;
   private deltaY: number;
 
-  constructor({
-    deltaX = 0,
-    deltaY = 0
-  }: {
-    deltaX?: number;
-    deltaY?: number;
-  }) {
+  constructor(
+    state: DrawingState,
+    {
+      deltaX = 0,
+      deltaY = 0
+    }: {
+      deltaX?: number;
+      deltaY?: number;
+    }
+  ) {
     super();
-
+    this.selectedShapes = state.selectedShapes.slice();
     this.deltaX = deltaX;
     this.deltaY = deltaY;
   }
 
-  protected executeCommand = (state: DrawingState) => {
-    this.selectedShapes = state.selectedShapes.slice();
+  public execute = (state: DrawingState) => {
     this.selectedShapes.forEach(shape => shape.move(this.deltaX, this.deltaY));
   };
 
   public undo = (state: DrawingState) => {
-    super.undo(state);
-
     this.selectedShapes.forEach(shape =>
       shape.move(-this.deltaX, -this.deltaY)
     );
