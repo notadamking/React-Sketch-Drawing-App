@@ -19,8 +19,6 @@ npm start           # Open a web browser and visit http://localhost:3000 to view
 - Remove Template Pattern on DrawingCommand to reduce memory usage \*\*
 - Add color to serialization of Shape \*\*
 - Move temporary opacity to Shape.draw method, to avoid extraneous methods to change color \*\*
+- Reduce the size of DrawingState and DrawingCanvas \*\*
+- Create Canvas component and move render methods out of DrawingCanvas \*\*
 - Implement caching of images to save memory on using the same image
-- Reduce the size of DrawingState and DrawingCanvas
-  - Perhaps split DrawingState into multiple state components
-    - Perhaps get rid of unnecessary mobx??
-  - Create Canvas component and move render methods out of DrawingCanvas

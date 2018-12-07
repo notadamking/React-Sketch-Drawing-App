@@ -1,4 +1,4 @@
-.HeaderPanel__panel {
+.ActionPanel__panel {
   width: 100%;
   height: 50px;
   padding: 10px 1rem;
@@ -21,12 +21,12 @@
     }
   }
 
-  .HeaderPanel__panel__input {
+  .ActionPanel__panel__input {
     max-width: 800px;
     margin-right: -1.5rem;
   }
 
-  .HeaderPanel__panel__delete {
+  .ActionPanel__panel__delete {
     color: #878787;
 
     z-index: 10000;
@@ -34,11 +34,11 @@
     cursor: pointer;
   }
 
-  .HeaderPanel__panel__save {
+  .ActionPanel__panel__save {
     margin-left: 1.5rem;
   }
 
-  .HeaderPanel__panel__actions {
+  .ActionPanel__panel__actions {
     position: relative;
 
     margin-left: auto;
@@ -49,7 +49,7 @@
     display: flex;
     flex-direction: row;
 
-    .HeaderPanel__panel__actions__icon {
+    .ActionPanel__panel__actions__icon {
       font-size: 20px;
       padding: 14px 1rem;
 
@@ -66,7 +66,7 @@
       }
     }
 
-    .HeaderPanel__panel__color_picker {
+    .ActionPanel__panel__color_picker {
       position: absolute;
       top: 55px;
       right: 5px;

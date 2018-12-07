@@ -6,10 +6,10 @@ import { SketchPicker, ColorResult } from "react-color";
 import cx from "classnames";
 
 import { ColorCommand, DeleteCommand, PasteCommand } from "../../commands";
-import { HotKeyListener } from "../../components";
+import { HotKeyListener } from "..";
 import DrawingState from "../../state/DrawingState";
 
-import "./HeaderPanel.scss";
+import "./ActionPanel.scss";
 
 export interface Props {
   drawing?: DrawingState;
@@ -23,7 +23,7 @@ export interface State {
 
 @inject("drawing")
 @observer
-class HeaderPanel extends React.Component<Props, State> {
+class ActionPanel extends React.Component<Props, State> {
   public state: State = {
     isEditing: false,
     isPickerVisible: false
@@ -127,10 +127,10 @@ class HeaderPanel extends React.Component<Props, State> {
     );
 
     return (
-      <div className="HeaderPanel__panel">
+      <div className="ActionPanel__panel">
         {isEditing ? (
           <Input
-            className="HeaderPanel__panel__input"
+            className="ActionPanel__panel__input"
             value={drawing!.title}
             placeholder="Enter a title..."
             onKeyUp={this.handleKeyUp}
@@ -141,14 +141,14 @@ class HeaderPanel extends React.Component<Props, State> {
         )}
         <Tooltip title="Clear title">
           <Icon
-            className="HeaderPanel__panel__delete"
+            className="ActionPanel__panel__delete"
             type="close-circle"
             onClick={this.clearTitle}
           />
         </Tooltip>
         {isEditing && (
           <Button
-            className="HeaderPanel__panel__save"
+            className="ActionPanel__panel__save"
             type="primary"
             onClick={this.toggleEditing}
           >
@@ -156,11 +156,11 @@ class HeaderPanel extends React.Component<Props, State> {
           </Button>
         )}
 
-        <div className="HeaderPanel__panel__actions">
+        <div className="ActionPanel__panel__actions">
           {this.actions.map((action, i) => (
             <Tooltip key={i} title={action.title} placement="bottom">
               <Icon
-                className={cx("HeaderPanel__panel__actions__icon")}
+                className={cx("ActionPanel__panel__actions__icon")}
                 type={action.icon}
                 onClick={action.onClick}
               />
@@ -170,7 +170,7 @@ class HeaderPanel extends React.Component<Props, State> {
           <HotKeyListener listeners={hotKeyListeners} />
 
           {isPickerVisible && (
-            <div className="HeaderPanel__panel__color_picker">
+            <div className="ActionPanel__panel__color_picker">
               <SketchPicker
                 color={drawing!.color}
                 onChangeComplete={this.handleColorChange}
@@ -183,4 +183,4 @@ class HeaderPanel extends React.Component<Props, State> {
   }
 }
 
-export default HeaderPanel;
+export default ActionPanel;
