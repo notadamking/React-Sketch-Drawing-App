@@ -23,6 +23,7 @@ export interface State {
   height: number;
   width: number;
   isDragging: boolean;
+  isCtrlHeld: boolean;
   shouldRender: boolean;
 }
 
@@ -38,6 +39,7 @@ class DrawingPanel extends React.Component<Props, State> {
     height: 0,
     width: 0,
     isDragging: false,
+    isCtrlHeld: false,
     shouldRender: false
   };
 
@@ -50,6 +52,9 @@ class DrawingPanel extends React.Component<Props, State> {
     const width = current ? current.clientWidth : 0;
 
     this.setState({ height, width });
+
+    // TODO: Add rotate listeners
+    // document.addEventListener('keydown', )
   }
 
   public activateCurrentTool = (dest: {
@@ -120,15 +125,20 @@ class DrawingPanel extends React.Component<Props, State> {
   };
 
   public moveSelectedShapes = (point: Point) => {
-    const { previousPoint, temporaryShapes } = this.state;
+    const { previousPoint } = this.state;
 
     if (previousPoint) {
+      const temporaryShapes = [] as Shape[];
+
       const deltaX = point.getX() - previousPoint.getX();
       const deltaY = point.getY() - previousPoint.getY();
 
-      for (const shape of temporaryShapes) {
+      for (const shape of this.state.temporaryShapes) {
         shape.move(deltaX, deltaY);
+        temporaryShapes.push(shape);
       }
+
+      this.setState({ temporaryShapes });
     }
   };
 
@@ -216,6 +226,7 @@ class DrawingPanel extends React.Component<Props, State> {
   public render() {
     const {
       isDragging,
+      shouldRender,
       currentShape,
       temporaryShapes,
       height,
@@ -231,6 +242,7 @@ class DrawingPanel extends React.Component<Props, State> {
           isDragging={isDragging}
           currentShape={currentShape}
           temporaryShapes={temporaryShapes}
+          triggerRender={shouldRender}
           onClick={this.handleClick}
           onMouseMove={this.handleMouseMove}
           onMouseDown={this.handleMouseDown}

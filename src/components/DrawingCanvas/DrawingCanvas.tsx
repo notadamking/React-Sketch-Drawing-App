@@ -9,6 +9,7 @@ export interface Props {
   height: number;
   width: number;
   isDragging: boolean;
+  triggerRender: boolean;
   currentShape: Shape | null;
   temporaryShapes: Shape[];
   onClick: (event: React.MouseEvent<HTMLCanvasElement>) => void;
