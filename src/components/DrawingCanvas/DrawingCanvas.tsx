@@ -5,7 +5,7 @@ import { cloneDeep } from "lodash";
 import { CreateCommand, MoveCommand } from "../../commands";
 import DrawingState from "../../state/DrawingState";
 
-import HeaderPanel from "../HeaderPanel";
+import ActionPanel from "../ActionPanel";
 import { Point, Shape, Line } from "../../shapes";
 
 import "./DrawingCanvas.scss";
@@ -267,7 +267,7 @@ class DrawingCanvas extends React.Component<Props, State> {
 
     return (
       <div ref={this.container} className="DrawingCanvas__container">
-        <HeaderPanel triggerRender={this.triggerRender} />
+        <ActionPanel triggerRender={this.triggerRender} />
         <canvas
           id="canvas"
           height={height}

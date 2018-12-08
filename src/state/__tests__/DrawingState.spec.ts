@@ -18,8 +18,8 @@ test("ValidConstructor", () => {
   expect(state.shapes.getChildren().length).toEqual(0);
   expect(state.selectedShapes.length).toEqual(0);
   expect(state.pasteBuffer.length).toEqual(0);
-  expect(state.commandHistory.length).toEqual(0);
-  expect(state.undoHistory.length).toEqual(0);
+  expect(state.getCommandHistory().length).toEqual(0);
+  expect(state.getUndoHistory().length).toEqual(0);
 });
 
 test("Setters", () => {
@@ -193,21 +193,21 @@ test("Execute, undo, and redo command", () => {
   const state = new DrawingState();
   const command = new DeleteCommand(state);
 
-  expect(state.commandHistory.length).toEqual(0);
-  expect(state.undoHistory.length).toEqual(0);
+  expect(state.getCommandHistory().length).toEqual(0);
+  expect(state.getUndoHistory().length).toEqual(0);
 
   state.executeCommand(command);
 
-  expect(state.commandHistory.length).toEqual(1);
-  expect(state.undoHistory.length).toEqual(0);
+  expect(state.getCommandHistory().length).toEqual(1);
+  expect(state.getUndoHistory().length).toEqual(0);
 
   state.undoCommand();
 
-  expect(state.commandHistory.length).toEqual(0);
-  expect(state.undoHistory.length).toEqual(1);
+  expect(state.getCommandHistory().length).toEqual(0);
+  expect(state.getUndoHistory().length).toEqual(1);
 
   state.redoCommand();
 
-  expect(state.commandHistory.length).toEqual(1);
-  expect(state.undoHistory.length).toEqual(0);
+  expect(state.getCommandHistory().length).toEqual(1);
+  expect(state.getUndoHistory().length).toEqual(0);
 });

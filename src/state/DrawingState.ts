@@ -8,8 +8,11 @@ import DrawingCommand from "../commands/DrawingCommand";
 import DrawingTool from "../tools/DrawingTool";
 
 class DrawingState {
-  @observable
-  public lastUpdated: string = new Date().toTimeString();
+  private imageFlyweights: { [key: string]: Uint8ClampedArray } = {};
+
+  private commandHistory: DrawingCommand[] = [] as DrawingCommand[];
+
+  private undoHistory: DrawingCommand[] = [] as DrawingCommand[];
 
   @observable
   public title: string = "Untitled";
@@ -38,11 +41,13 @@ class DrawingState {
   @observable
   public pasteBuffer: Shape[] = [] as Shape[];
 
-  @observable
-  public commandHistory: DrawingCommand[] = [] as DrawingCommand[];
+  public getCommandHistory = () => {
+    return this.commandHistory.slice();
+  };
 
-  @observable
-  public undoHistory: DrawingCommand[] = [] as DrawingCommand[];
+  public getUndoHistory = () => {
+    return this.undoHistory.slice();
+  };
 
   @action
   public setTitle = (title: string) => {
@@ -57,19 +62,16 @@ class DrawingState {
   @action
   public addShape = (shape: Shape) => {
     this.shapes.addShape(shape);
-    this.lastUpdated = new Date().toTimeString();
   };
 
   @action
   public removeShape = (shape: Shape) => {
     this.shapes.removeShape(shape);
-    this.lastUpdated = new Date().toTimeString();
   };
 
   @action
   public removeAllShapes = () => {
     this.shapes.removeAllShapes();
-    this.lastUpdated = new Date().toTimeString();
   };
 
   @action
@@ -101,10 +103,16 @@ class DrawingState {
   @action
   public setImageFromFile(file: File) {
     const bmp = new Bitmap(file);
+    const key = `${file.name}:${file.lastModified}:${file.size}`;
 
-    bmp.read((response: Bitmap) => {
-      this.imageData = response.currentData();
-    });
+    if (!this.imageFlyweights[key]) {
+      bmp.read((response: Bitmap) => {
+        const data = response.currentData();
+        this.imageData = this.imageFlyweights[key] = data;
+      });
+    } else {
+      this.imageData = this.imageFlyweights[key];
+    }
 
     const image = new Image();
 

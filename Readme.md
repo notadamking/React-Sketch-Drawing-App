@@ -14,13 +14,20 @@ npm start           # Open a web browser and visit http://localhost:3000 to view
 
 ## Improvements
 
+Modularity, Abstraction, Encapsulation:
+
 - Reduce memory usage across app (for example by saving less state in each command) \*\*
-- Make Color action into a undoable command \*\*
-- Remove Template Pattern on DrawingCommand to reduce memory usage \*\*
-- Add color to serialization of Shape \*\*
+  - Remove Template Pattern on DrawingCommand to reduce memory usage \*\*
 - Move temporary opacity to Shape.draw method, to avoid extraneous methods to change color \*\*
-- Implement caching of images to save memory on using the same image
 - Reduce the size of DrawingState and DrawingCanvas
-  - Perhaps split DrawingState into multiple state components
-    - Perhaps get rid of unnecessary mobx??
   - Create Canvas component and move render methods out of DrawingCanvas
+
+Significant Features:
+
+- Add color to Shape specification \*\*
+
+New Design Patterns:
+
+- Implement Flyweight pattern to cache images to save memory when using the same image \*\*
+- Implement Command pattern on all actions within ActionPanel and all actions that should be undo-able. \*\*
+  - Make Color action into a undoable command \*\*
