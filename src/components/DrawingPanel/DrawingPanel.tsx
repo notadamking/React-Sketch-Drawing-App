@@ -23,7 +23,6 @@ export interface State {
   height: number;
   width: number;
   isDragging: boolean;
-  isCtrlHeld: boolean;
   shouldRender: boolean;
 }
 
@@ -39,7 +38,6 @@ class DrawingPanel extends React.Component<Props, State> {
     height: 0,
     width: 0,
     isDragging: false,
-    isCtrlHeld: false,
     shouldRender: false
   };
 
@@ -52,9 +50,6 @@ class DrawingPanel extends React.Component<Props, State> {
     const width = current ? current.clientWidth : 0;
 
     this.setState({ height, width });
-
-    // TODO: Add rotate listeners
-    // document.addEventListener('keydown', )
   }
 
   public activateCurrentTool = (dest: {
