@@ -3,7 +3,7 @@ import { Square, Point } from "../shapes";
 
 class SquareTool implements DrawingTool {
   public numPoints: number = 2;
-  public shouldRender: boolean = true;
+  public isSelectionTool: boolean = false;
 
   public create(points: Point[]): Square {
     const firstX = points[0].getX();

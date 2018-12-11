@@ -3,7 +3,7 @@ import { Rectangle, Point } from "../shapes";
 
 class SelectorTool implements DrawingTool {
   public numPoints: number = 2;
-  public shouldRender: boolean = false;
+  public isSelectionTool: boolean = true;
 
   public create(points: Point[]): Rectangle {
     const firstX = points[0].getX();

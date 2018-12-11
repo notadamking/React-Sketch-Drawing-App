@@ -7,7 +7,6 @@ it("Execute and undo work correctly", () => {
   const width = 10;
 
   const state = new DrawingState();
-  const command = new PasteCommand(state);
   const square = new Square({ topLeft, width });
 
   state.addShape(square);
@@ -16,6 +15,8 @@ it("Execute and undo work correctly", () => {
 
   state.setSelectedShapes([square]);
   state.copySelectedToPasteBuffer();
+
+  const command = new PasteCommand(state);
 
   command.execute(state);
 

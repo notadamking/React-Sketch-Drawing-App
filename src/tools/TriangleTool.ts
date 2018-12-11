@@ -3,7 +3,7 @@ import { Triangle, Point } from "../shapes";
 
 class TriangleTool implements DrawingTool {
   public numPoints: number = 3;
-  public shouldRender: boolean = true;
+  public isSelectionTool: boolean = false;
 
   public create(points: Point[]): Triangle {
     const pointA = points[0];

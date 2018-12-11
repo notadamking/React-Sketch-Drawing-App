@@ -75,6 +75,7 @@ test("ToJSON", () => {
 
   expect(triangle.toJSON()).toEqual({
     type: "Triangle",
+    color: "black",
     xPointA: 1,
     yPointA: 1,
     xPointB: 5,

@@ -71,11 +71,11 @@ class DrawingPanel extends React.Component<Props, State> {
     }
 
     if (selectedPoints.length >= drawing!.activeTool!.numPoints) {
-      if (drawing!.activeTool!.shouldRender) {
+      if (drawing!.activeTool!.isSelectionTool) {
+        drawing!.selectShapes(selectedPoints);
+      } else {
         const command = new CreateCommand(drawing!, selectedPoints);
         drawing!.executeCommand(command);
-      } else {
-        drawing!.selectShapes(selectedPoints);
       }
 
       this.setState({ selectedPoints: [] as Point[], currentShape: null });
@@ -94,15 +94,17 @@ class DrawingPanel extends React.Component<Props, State> {
           [...selectedPoints, point],
           drawing!
         );
-        currentShape.setColor(drawing!.color);
       } else if (selectedPoints.length === 1) {
         currentShape = new Line({
           pointA: selectedPoints[0],
           pointB: point
         });
-        currentShape.setColor(drawing!.color);
       }
     } catch {} // tslint:disable-line
+
+    if (currentShape) {
+      currentShape.setColor(drawing!.color);
+    }
 
     this.setState({ currentShape });
   };

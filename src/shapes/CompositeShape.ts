@@ -111,6 +111,12 @@ class CompositeShape extends Shape {
     );
   }
 
+  public contains(point: Point) {
+    return this.children.reduce((contains, shape) => {
+      return contains || shape.contains(point);
+    }, false);
+  }
+
   @action
   public move(deltaX: number, deltaY: number) {
     return this.children.forEach(child => child.move(deltaX, deltaY));

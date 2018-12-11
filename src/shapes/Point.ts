@@ -71,6 +71,10 @@ class Point extends Shape {
     return [this];
   }
 
+  public contains(point: Point) {
+    return point.getX() === this.x && point.getY() === this.y;
+  }
+
   public isEqual(point: Point): boolean {
     return this.x === point.getX() && this.y === point.getY();
   }

@@ -77,24 +77,40 @@ class DrawingState {
   @action
   public selectShapes = (points: Point[]) => {
     if (this.activeTool) {
-      const newShape = this.activeTool.create(points) as Rectangle;
+      const newShape: Rectangle | null = this.activeTool.create(
+        points,
+        this
+      ) as Rectangle;
+      let selectedShapes = [];
 
-      const selectedShapes = this.shapes.getChildren().reduce(
-        (selected, child) => {
-          const isSelected = child
-            .getPoints()
-            .reduce((hasBeenSelected, childPoint) => {
-              return hasBeenSelected || newShape.contains(childPoint);
-            }, false);
+      if (newShape) {
+        selectedShapes = this.shapes.getChildren().reduce(
+          (selected, child) => {
+            const isSelected = child
+              .getPoints()
+              .reduce((hasBeenSelected, childPoint) => {
+                return hasBeenSelected || newShape.contains(childPoint);
+              }, false);
 
-          if (isSelected) {
-            return [...selected, child];
-          }
+            if (isSelected) {
+              return [...selected, child];
+            }
 
-          return selected;
-        },
-        [] as Shape[]
-      );
+            return selected;
+          },
+          [] as Shape[]
+        );
+      } else if (points.length > 0) {
+        const point = points[0];
+
+        const selected = this.shapes
+          .getChildren()
+          .find((shape: Shape) => shape.contains(point));
+
+        if (selected) {
+          selectedShapes.push(selected);
+        }
+      }
 
       this.setSelectedShapes(selectedShapes);
     }
@@ -147,16 +163,19 @@ class DrawingState {
   public saveToFile() {
     const script = this.shapes.toJSON();
 
-    const data =
-      "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(script));
+    const data = new Blob([JSON.stringify(script)], {
+      type: "application/json"
+    });
 
     const link = document.createElement("a");
 
-    link.href = `data:${data}`;
+    link.href = URL.createObjectURL(data);
     link.download = `${this.title}.json`;
     link.style.display = "none";
 
     document.body.appendChild(link);
+
+    console.log("link.href", link.href);
 
     link.click();
   }

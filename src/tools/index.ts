@@ -1,4 +1,5 @@
 import DrawingTool from "./DrawingTool";
+import CursorTool from "./CursorTool";
 import SelectorTool from "./SelectorTool";
 import LineTool from "./LineTool";
 import SquareTool from "./SquareTool";
@@ -10,6 +11,7 @@ import EmbeddedPictureTool from "./EmbeddedPictureTool";
 
 export {
   DrawingTool,
+  CursorTool,
   SelectorTool,
   LineTool,
   SquareTool,

@@ -7,7 +7,10 @@ class CreateCommand extends DrawingCommand {
 
   constructor(state: DrawingState, selectedPoints: Point[]) {
     super();
-    this.createdShape = state.activeTool!.create(selectedPoints, state);
+    this.createdShape = state.activeTool!.create(
+      selectedPoints,
+      state
+    ) as Shape;
     this.createdShape.setColor(state.color);
   }
 

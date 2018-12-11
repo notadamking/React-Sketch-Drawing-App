@@ -3,7 +3,7 @@ import { Ellipse, Point } from "../shapes";
 
 class EllipseTool implements DrawingTool {
   public numPoints: number = 2;
-  public shouldRender: boolean = true;
+  public isSelectionTool: boolean = false;
 
   public create(points: Point[]): Ellipse {
     const center = points[0];

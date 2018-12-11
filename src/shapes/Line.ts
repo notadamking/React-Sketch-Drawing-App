@@ -87,6 +87,17 @@ class Line extends Shape {
     return [this.pointA, this.pointB];
   }
 
+  public contains(point: Point) {
+    const aX = this.pointA.getX();
+    const aY = this.pointA.getY();
+    const bX = this.pointB.getX();
+    const bY = this.pointB.getY();
+    const cX = point.getX();
+    const cY = point.getY();
+
+    return Math.abs((cY - aY) * (bX - aX) - (bY - aY) * (cX - aX)) < 1000;
+  }
+
   public move(deltaX: number, deltaY: number) {
     this.pointA.move(deltaX, deltaY);
     this.pointB.move(deltaX, deltaY);

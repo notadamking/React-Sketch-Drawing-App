@@ -104,6 +104,7 @@ test("ToJSON", () => {
 
   expect(circle.toJSON()).toEqual({
     type: "Circle",
+    color: "black",
     centerX: center.getX(),
     centerY: center.getY(),
     radius

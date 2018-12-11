@@ -195,11 +195,15 @@ class Rectangle extends Shape2D {
   }
 
   public contains(point: Point): boolean {
+    const leftX = this.topLeft.getX();
+    const topY = this.topLeft.getY();
+    const rightX = leftX + this.width;
+    const bottomY = topY + this.height;
+    const pointX = point.getX();
+    const pointY = point.getY();
+
     return (
-      this.topLeft.getX() <= point.getX() &&
-      point.getX() <= this.topLeft.getX() + this.width &&
-      this.topLeft.getY() <= point.getY() &&
-      point.getY() <= this.topLeft.getY() + this.height
+      leftX <= pointX && pointX <= rightX && topY <= pointY && pointY <= bottomY
     );
   }
 

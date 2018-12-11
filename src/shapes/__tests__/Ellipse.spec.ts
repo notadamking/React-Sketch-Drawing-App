@@ -129,6 +129,7 @@ test("ToJSON", () => {
 
   expect(ellipse.toJSON()).toEqual({
     type: "Ellipse",
+    color: "black",
     centerX: center.getX(),
     centerY: center.getY(),
     radiusX,

@@ -54,7 +54,7 @@ test("ToJSON", () => {
 
   expect(shape.toJSON()).toEqual({
     type: "CompositeShape",
-    children: [{ type: "Point", x: 1, y: 1 }]
+    children: [{ type: "Point", color: "black", x: 1, y: 1 }]
   });
 });
 

@@ -92,6 +92,7 @@ test("ToJSON", () => {
 
   expect(point.toJSON()).toEqual({
     type: "Point",
+    color: "black",
     x: point.getX(),
     y: point.getY()
   });

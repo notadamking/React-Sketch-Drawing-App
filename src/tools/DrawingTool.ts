@@ -3,9 +3,9 @@ import DrawingState from "../state/DrawingState";
 
 abstract class DrawingTool {
   public abstract numPoints: number;
-  public abstract shouldRender: boolean;
+  public abstract isSelectionTool: boolean;
 
-  public abstract create(points: Point[], state?: DrawingState): Shape;
+  public abstract create(points: Point[], state?: DrawingState): Shape | null;
 }
 
 export default DrawingTool;

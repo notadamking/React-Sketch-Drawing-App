@@ -12,10 +12,12 @@ import {
   CircleTool,
   EllipseTool,
   EmbeddedPictureTool,
-  SelectorTool
+  SelectorTool,
+  CursorTool
 } from "../../tools";
 import DrawingState from "../../state/DrawingState";
 
+import CursorSVG from "./cursor.svg";
 import SelectSVG from "./select.svg";
 import LineSVG from "./line.svg";
 import SquareSVG from "./square.svg";
@@ -40,44 +42,58 @@ export interface State {
 class ToolPanel extends React.Component<Props, State> {
   public tools = [
     {
+      title: "Cursor",
+      image: CursorSVG,
+      tool: new CursorTool(),
+      cursor: "default"
+    },
+    {
       title: "Select",
       image: SelectSVG,
-      tool: new SelectorTool()
+      tool: new SelectorTool(),
+      cursor: "crosshair"
     },
     {
       title: "Line",
       image: LineSVG,
-      tool: new LineTool()
+      tool: new LineTool(),
+      cursor: "crosshair"
     },
     {
       title: "Square",
       image: SquareSVG,
-      tool: new SquareTool()
+      tool: new SquareTool(),
+      cursor: "crosshair"
     },
     {
       title: "Rectangle",
       image: RectangleSVG,
-      tool: new RectangleTool()
+      tool: new RectangleTool(),
+      cursor: "crosshair"
     },
     {
       title: "Triangle",
       image: TriangleSVG,
-      tool: new TriangleTool()
+      tool: new TriangleTool(),
+      cursor: "crosshair"
     },
     {
       title: "Circle",
       image: CircleSVG,
-      tool: new CircleTool()
+      tool: new CircleTool(),
+      cursor: "crosshair"
     },
     {
       title: "Ellipse",
       image: EllipseSVG,
-      tool: new EllipseTool()
+      tool: new EllipseTool(),
+      cursor: "crosshair"
     },
     {
       title: "Image",
       image: ImageSVG,
       tool: new EmbeddedPictureTool(),
+      cursor: "crosshair",
       onClick: () => {
         const input = document.getElementById("imageFile");
 
@@ -95,6 +111,12 @@ class ToolPanel extends React.Component<Props, State> {
   };
 
   public setActiveTool = (index: number) => () => {
+    const canvas = document.getElementById("canvas");
+
+    if (canvas) {
+      canvas.style.cursor = this.tools[index].cursor;
+    }
+
     if (this.tools[index].onClick) {
       this.tools[index].onClick!();
     }

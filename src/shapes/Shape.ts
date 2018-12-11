@@ -44,6 +44,7 @@ export default abstract class Shape {
   }
 
   public abstract getPoints(): Point[];
+  public abstract contains(point: Point): boolean;
 
   public abstract toJSON(): any;
   public abstract draw(

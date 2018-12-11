@@ -4,7 +4,7 @@ import DrawingState from "../state/DrawingState";
 
 class EmbeddedPictureTool implements DrawingTool {
   public numPoints: number = 2;
-  public shouldRender: boolean = true;
+  public isSelectionTool: boolean = false;
 
   public create(points: Point[], state: DrawingState): EmbeddedPicture {
     const firstX = points[0].getX();

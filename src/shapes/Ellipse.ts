@@ -162,6 +162,19 @@ class Ellipse extends Shape2D {
     ];
   }
 
+  public contains(point: Point) {
+    const x = point.getX();
+    const y = point.getY();
+    const h = this.center.getX();
+    const k = this.center.getY();
+
+    return (
+      Math.pow(x - h, 2) / Math.pow(this.radiusX, 2) +
+        Math.pow(y - k, 2) / Math.pow(this.radiusY, 2) <
+      1
+    );
+  }
+
   public move(deltaX: number, deltaY: number) {
     this.center.move(deltaX, deltaY);
     this.resetEdges();

@@ -28,7 +28,7 @@ class Triangle extends Shape2D {
     const pointB = new Point({ x: xPointB, y: yPointB });
     const pointC = new Point({ x: xPointC, y: yPointC });
 
-    return new Triangle({ pointA, pointB, pointC });
+    return new Triangle({ color, pointA, pointB, pointC });
   }
 
   private pointA: Point;
@@ -134,6 +134,32 @@ class Triangle extends Shape2D {
 
   public getPoints() {
     return [this.pointA, this.pointB, this.pointC];
+  }
+
+  private getPointSigns(point: Point) {
+    const pX = point.getX();
+    const pY = point.getY();
+    const aX = this.pointA.getX();
+    const aY = this.pointA.getY();
+    const bX = this.pointB.getX();
+    const bY = this.pointB.getY();
+    const cX = this.pointC.getX();
+    const cY = this.pointC.getY();
+
+    const sA = (pX - bX) * (aY - bY) - (aX - bX) * (pY - bY);
+    const sB = (pX - cX) * (bY - cY) - (bX - cX) * (pY - cY);
+    const sC = (pX - aX) * (cY - aY) - (cX - aX) * (pY - aY);
+
+    return [sA, sB, sC];
+  }
+
+  public contains(point: Point) {
+    const signs = this.getPointSigns(point);
+
+    const hasNeg = signs.find((sign: number) => sign < 0);
+    const hasPos = signs.find((sign: number) => sign > 0);
+
+    return !hasNeg || !hasPos;
   }
 
   public move(deltaX: number, deltaY: number): void {

@@ -61,6 +61,7 @@ test("ToJSON", () => {
 
   expect(line.toJSON()).toEqual({
     type: "Line",
+    color: "black",
     xPointA: pointA.getX(),
     yPointA: pointA.getY(),
     xPointB: pointB.getX(),

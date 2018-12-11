@@ -8,9 +8,10 @@ it("Execute and undo work correctly", () => {
 
   const state = new DrawingState();
   const tool = new RectangleTool();
-  const command = new CreateCommand(state, points);
 
   state.setActiveTool(tool);
+
+  const command = new CreateCommand(state, points);
 
   command.execute(state);
 

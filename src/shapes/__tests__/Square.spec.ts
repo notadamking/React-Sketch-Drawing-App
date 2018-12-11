@@ -80,6 +80,7 @@ test("ToJSON", () => {
 
   expect(rect.toJSON()).toEqual({
     type: "Square",
+    color: "black",
     topLeftX: topLeft.getX(),
     topLeftY: topLeft.getY(),
     width

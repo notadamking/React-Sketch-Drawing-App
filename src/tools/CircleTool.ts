@@ -3,7 +3,7 @@ import { Circle, Point } from "../shapes";
 
 class CircleTool implements DrawingTool {
   public numPoints: number = 2;
-  public shouldRender: boolean = true;
+  public isSelectionTool: boolean = false;
 
   public create(points: Point[]): Circle {
     const center = points[0];

@@ -25,6 +25,19 @@ export default class EmbeddedPicture extends Rectangle {
     width
   }: IEmbeddedPictureConstructor) {
     const topLeft = new Point({ x: topLeftX, y: topLeftY });
+    let data;
+
+    if (dataBuffer.data) {
+      data = new Uint8ClampedArray(
+        Buffer.from(dataBuffer.data || dataBuffer.toString())
+      );
+    } else {
+      const buffer = Object.keys(dataBuffer).map(
+        (key: string) => dataBuffer[key]
+      );
+
+      data = new Uint8ClampedArray(Buffer.from(buffer));
+    }
 
     return new EmbeddedPicture({
       topLeft,
@@ -32,7 +45,7 @@ export default class EmbeddedPicture extends Rectangle {
       imageWidth,
       height,
       width,
-      data: new Uint8ClampedArray(Buffer.from(dataBuffer.data))
+      data
     });
   }
 
